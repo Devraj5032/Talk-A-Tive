@@ -5,8 +5,9 @@ import axios from "axios";
 import { AddIcon } from "@chakra-ui/icons";
 import ChatLoading from "./ChatLoading";
 import { getSender } from "../config/ChatLogics";
+import GroupChatModal from "./miscellaneous/GroupChatModal";
 
-const MyChats = () => {
+const MyChats = ({fetchAgain}) => {
   const [loggedUser, setLoggedUser] = useState();
 
   const { user, selectedChat, setSelectedChat, chats, setChats } = ChatState();
@@ -35,11 +36,10 @@ const MyChats = () => {
     }
   };
 
-
   useEffect(() => {
     setLoggedUser(JSON.parse(localStorage.getItem("userInfo")));
     fetchChats();
-  }, []);
+  }, [fetchAgain]);
 
   return (
     <Box
@@ -63,13 +63,15 @@ const MyChats = () => {
         alignItems="center"
       >
         My Chats
-        <Button
-          display="flex"
-          fontSize={{ base: "17px", md: "10px", lg: "17px" }}
-          rightIcon={<AddIcon />}
-        >
-          New Group Chat
-        </Button>
+        <GroupChatModal>
+          <Button
+            display="flex"
+            fontSize={{ base: "17px", md: "10px", lg: "17px" }}
+            rightIcon={<AddIcon />}
+          >
+            New Group Chat
+          </Button>
+        </GroupChatModal>
       </Box>
 
       <Box
@@ -86,7 +88,7 @@ const MyChats = () => {
           <Stack overflowY="scroll">
             {chats.map((chat) => (
               <Box
-                onClick={() => selectedChat(chat)}
+                onClick={() => setSelectedChat(chat)}
                 cursor="pointer"
                 bg={selectedChat === chat ? "#38B2AC" : "#E8E8E8"}
                 px={3}
@@ -95,7 +97,9 @@ const MyChats = () => {
                 key={chat._id}
               >
                 <Text>
-                  {!chat.isGroupChat ? getSender(loggedUser , chat.users) : (chat.chatName)}
+                  {!chat.isGroupChat
+                    ? getSender(loggedUser, chat.users)
+                    : chat.chatName}
                 </Text>
               </Box>
             ))}
