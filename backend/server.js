@@ -1,4 +1,5 @@
 const express = require("express");
+const path = require("path");
 const { chats } = require("./Data/data");
 const dotenv = require("dotenv");
 const cors = require("cors");
@@ -17,9 +18,16 @@ app.use(express.json()); // to accept json data
 
 const PORT = process.env.PORT || 5000;
 
-app.get("/", (req, res) => {
-  res.send("API is running");
+app.use(express.static(path.join(__dirname, "../frontend/build")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "../frontend/build/index.html"));
 });
+
+
+// app.get("/", (req, res) => {
+//   res.send("API is running");
+// });
 
 app.use("/api/user", userRoutes);
 app.use("/api/chat", chatRoutes);
