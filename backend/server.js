@@ -20,9 +20,7 @@ const PORT = process.env.PORT || 5000;
 
 app.use(express.static(path.join(__dirname, "../frontend/build")));
 
-app.get("*", (req, res) => {
-  res.sendFile(path.resolve(__dirname, "../frontend/build/index.html"));
-});
+
 
 
 // app.get("/", (req, res) => {
@@ -32,6 +30,10 @@ app.get("*", (req, res) => {
 app.use("/api/user", userRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/message", messageRoutes);
+
+app.get("*", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "../frontend/build/index.html"));
+});
 
 app.use(notFound);
 app.use(errorHandler);
